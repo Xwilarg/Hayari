@@ -1,3 +1,4 @@
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <QTabBar>
 #include "inc/MainWindow.hpp"
@@ -13,18 +14,20 @@ namespace Hayari
 
         _mainLayout->addWidget(_tabs, 0, 0, 0, 0);
 
-        QWidget* content = new QWidget();
-        _tabs->addTab(content, "+");
         _tabs->installEventFilter(this);
+        AddTab();
         AddTab();
     }
 
     bool MainWindow::eventFilter(QObject* watched, QEvent* event)
     {
         if (watched == _tabs && event->type() == QEvent::MouseButtonPress) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-            RemoveTab(_tabs->tabBar()->tabAt(mouseEvent->pos()));
-            return true;
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->button() == Qt::MouseButton::MidButton) // TODO: Can't close last tab if selected
+            {
+                RemoveTab(_tabs->tabBar()->tabAt(mouseEvent->pos()));
+                return true;
+            }
         }
         return QMainWindow::eventFilter(watched, event);
     }
@@ -32,10 +35,18 @@ namespace Hayari
     /// Add a new tab to the browser
     void MainWindow::AddTab() noexcept
     {
-        QWidget* content = new QWidget();
-        _tabs->setTabText(_tabs->count() - 1, tr("New Tab")); // Rename last tab ("+" tab)
+        QWidget* content = new QWidget(_tabs);
+        int tabCount = _tabs->count();
+        if (tabCount > 0)
+        {
+            _tabs->setTabText(tabCount - 1, tr("New Tab")); // Rename last tab ("+" tab)
+        }
         _tabs->addTab(content, "+"); // Add new "+" tab
         connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
+
+        QVBoxLayout* tabLayout = new QVBoxLayout(content);
+        QLineEdit* urlInput = new QLineEdit(content);
+        tabLayout->addWidget(urlInput, 0);
     }
 
     void MainWindow::RemoveTab(int index) noexcept
