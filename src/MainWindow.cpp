@@ -1,6 +1,8 @@
 #include <QLineEdit>
 #include <QMouseEvent>
 #include <QTabBar>
+#include <QtWebEngine>
+#include <QWebEngineView>
 #include "inc/MainWindow.hpp"
 
 namespace Hayari
@@ -46,7 +48,11 @@ namespace Hayari
 
         QVBoxLayout* tabLayout = new QVBoxLayout(content);
         QLineEdit* urlInput = new QLineEdit(content);
+        QWebEngineView* nav = new QWebEngineView(content);
+        nav->load(QUrl("https://github.com/Xwilarg/Hayari"));
+        nav->show();
         tabLayout->addWidget(urlInput, 0);
+        tabLayout->addWidget(nav, 1);
     }
 
     void MainWindow::RemoveTab(int index) noexcept
