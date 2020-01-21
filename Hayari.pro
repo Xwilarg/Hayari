@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2020-01-21T18:02:10
-#
-#-------------------------------------------------
-
 QT       += core gui widgets
 
 TARGET = Hayari
@@ -18,4 +12,5 @@ SOURCES += \
 HEADERS += \
         inc/MainWindow.hpp
 
+target.path = .
 INSTALLS += target
