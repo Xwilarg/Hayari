@@ -3,6 +3,7 @@
 #include <QTabBar>
 #include <QtWebEngine>
 #include <QWebEngineView>
+#include "inc/BrowseWindow.hpp"
 #include "inc/MainWindow.hpp"
 
 namespace Hayari
@@ -46,13 +47,7 @@ namespace Hayari
         _tabs->addTab(content, "+"); // Add new "+" tab
         connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
 
-        QVBoxLayout* tabLayout = new QVBoxLayout(content);
-        QLineEdit* urlInput = new QLineEdit(content);
-        QWebEngineView* nav = new QWebEngineView(content);
-        nav->load(QUrl("https://github.com/Xwilarg/Hayari"));
-        nav->show();
-        tabLayout->addWidget(urlInput, 0);
-        tabLayout->addWidget(nav, 1);
+        new BrowseWindow(content); // TODO: delete when not used anymore
     }
 
     void MainWindow::RemoveTab(int index) noexcept

@@ -6,10 +6,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        src/BrowseWindow.cpp \
         src/main.cpp \
         src/MainWindow.cpp
 
 HEADERS += \
+        inc/BrowseWindow.hpp \
         inc/MainWindow.hpp
 
 target.path = .
