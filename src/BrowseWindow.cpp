@@ -10,10 +10,16 @@ namespace Hayari
         _layout->addWidget(_view, 1);
     }
 
+    BrowseWindow::~BrowseWindow() noexcept
+    {
+        delete _view; // Force the view to be destroyed so the page don't continue to play
+    }
+
     void BrowseWindow::PressEnter() noexcept
     {
         if (_urlInput->hasFocus() && !_urlInput->text().isEmpty()) // If we press enter while the URL bar have the focus
         {
+            _urlInput->clearFocus();
             if (_urlInput->text().startsWith("https://") || _urlInput->text().startsWith("http://"))
             {
                 _view->load(QUrl(_urlInput->text()));

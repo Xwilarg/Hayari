@@ -10,6 +10,7 @@ namespace Hayari
     {
     public:
         BrowseWindow(QWidget* parent) noexcept;
+        ~BrowseWindow() noexcept;
         void PressEnter() noexcept;
 
     private:
