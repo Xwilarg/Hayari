@@ -3,7 +3,7 @@ QT       += core gui widgets webengine webenginewidgets
 TARGET = Hayari
 TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
-CONFIG += c++11
+CONFIG += c++14
 
 SOURCES += \
         src/BrowseWindow.cpp \

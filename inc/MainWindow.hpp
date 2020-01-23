@@ -3,6 +3,7 @@
 # include <QMainWindow>
 # include <QGridLayout>
 # include <QTabWidget>
+# include "inc/BrowseWindow.hpp"
 
 namespace Hayari
 {
@@ -20,8 +21,9 @@ namespace Hayari
         QWidget*    _mainWidget;
         QTabWidget* _tabs;
         QGridLayout* _mainLayout;
+        std::vector<std::unique_ptr<BrowseWindow>> _tabsContent;
 
     private slots:
-        void ChangeTab(int index) noexcept;
+        void ChangeTabEvent(int index) noexcept;
     };
 }

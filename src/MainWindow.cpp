@@ -3,14 +3,13 @@
 #include <QTabBar>
 #include <QtWebEngine>
 #include <QWebEngineView>
-#include "inc/BrowseWindow.hpp"
 #include "inc/MainWindow.hpp"
 
 namespace Hayari
 {
     MainWindow::MainWindow() noexcept
         : QMainWindow(nullptr), _mainWidget(new QWidget(this)), _tabs(new QTabWidget(_mainWidget)),
-          _mainLayout(new QGridLayout(_mainWidget))
+          _mainLayout(new QGridLayout(_mainWidget)), _tabsContent()
     {
         resize(1000, 500);
         setCentralWidget(_mainWidget);
@@ -24,12 +23,21 @@ namespace Hayari
 
     bool MainWindow::eventFilter(QObject* watched, QEvent* event)
     {
-        if (watched == _tabs && event->type() == QEvent::MouseButtonPress) {
+        if (watched == _tabs && event->type() == QEvent::MouseButtonPress)
+        {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::MouseButton::MidButton) // TODO: Can't close last tab if selected
             {
                 RemoveTab(_tabs->tabBar()->tabAt(mouseEvent->pos()));
                 return true;
+            }
+        }
+        else if (event->type() == QEvent::KeyPress)
+        {
+            QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+            if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
+            {
+                _tabsContent[_tabs->currentIndex()]->PressEnter();
             }
         }
         return QMainWindow::eventFilter(watched, event);
@@ -45,22 +53,23 @@ namespace Hayari
             _tabs->setTabText(tabCount - 1, tr("New Tab")); // Rename last tab ("+" tab)
         }
         _tabs->addTab(content, "+"); // Add new "+" tab
-        connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
+        connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTabEvent(int)));
 
-        new BrowseWindow(content); // TODO: delete when not used anymore
+        _tabsContent.push_back(std::make_unique<BrowseWindow>(content));
     }
 
     void MainWindow::RemoveTab(int index) noexcept
     {
         if (index != _tabs->count() - 1) // We can't remove the "+" tab
         {
+            _tabsContent.erase(_tabsContent.begin() + index);
             _tabs->removeTab(index);
         }
     }
 
     /// Called when the user click on a tab
     /// If he click on the "+" tab, we create a new one
-    void MainWindow::ChangeTab(int index) noexcept
+    void MainWindow::ChangeTabEvent(int index) noexcept
     {
         if (index == _tabs->count() - 1) // Click on last tab ("+")
         {
