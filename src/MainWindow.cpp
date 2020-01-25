@@ -1,5 +1,6 @@
 #include <QLineEdit>
 #include <QMouseEvent>
+#include <QShortcut>
 #include <QTabBar>
 #include <QtWebEngine>
 #include <QWebEngineView>
@@ -19,6 +20,11 @@ namespace Hayari
         _tabs->installEventFilter(this);
         AddTab();
         AddTab();
+
+        QShortcut* scNewTab = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_T), this);
+        QShortcut* scCloseTab = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), this);
+        connect(scNewTab, SIGNAL(activated()), this, SLOT(AddTab()));
+        connect(scCloseTab, SIGNAL(activated()), this, SLOT(RemoveCurrentTab()));
     }
 
     bool MainWindow::eventFilter(QObject* watched, QEvent* event)
@@ -43,6 +49,15 @@ namespace Hayari
         return QMainWindow::eventFilter(watched, event);
     }
 
+    void MainWindow::RemoveTab(int index) noexcept
+    {
+        if (index != _tabs->count() - 1) // We can't remove the "+" tab
+        {
+            _tabsContent.erase(_tabsContent.begin() + index);
+            _tabs->removeTab(index);
+        }
+    }
+
     /// Add a new tab to the browser
     void MainWindow::AddTab() noexcept
     {
@@ -56,15 +71,12 @@ namespace Hayari
         connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTabEvent(int)));
 
         _tabsContent.push_back(std::make_unique<BrowseWindow>(content));
+        _tabs->setCurrentIndex(tabCount - 1);
     }
 
-    void MainWindow::RemoveTab(int index) noexcept
+    void MainWindow::RemoveCurrentTab() noexcept
     {
-        if (index != _tabs->count() - 1) // We can't remove the "+" tab
-        {
-            _tabsContent.erase(_tabsContent.begin() + index);
-            _tabs->removeTab(index);
-        }
+        RemoveTab(_tabs->currentIndex());
     }
 
     /// Called when the user click on a tab

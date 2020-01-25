@@ -16,7 +16,6 @@ namespace Hayari
 
     private:
         bool eventFilter(QObject *watched, QEvent *event) override;
-        void AddTab() noexcept;
         void RemoveTab(int index) noexcept;
         QWidget*    _mainWidget;
         QTabWidget* _tabs;
@@ -24,6 +23,8 @@ namespace Hayari
         std::vector<std::unique_ptr<BrowseWindow>> _tabsContent;
 
     private slots:
+        void AddTab() noexcept;
+        void RemoveCurrentTab() noexcept;
         void ChangeTabEvent(int index) noexcept;
     };
 }
