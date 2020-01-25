@@ -55,6 +55,10 @@ namespace Hayari
         {
             _tabsContent.erase(_tabsContent.begin() + index);
             _tabs->removeTab(index);
+            for (int i = index; i < _tabs->count(); i++)
+            {
+                _tabsContent[i]->DecreaseIndex();
+            }
         }
     }
 
@@ -70,7 +74,7 @@ namespace Hayari
         _tabs->addTab(content, "+"); // Add new "+" tab
         connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(ChangeTabEvent(int)));
 
-        _tabsContent.push_back(std::make_unique<BrowseWindow>(content));
+        _tabsContent.push_back(std::make_unique<BrowseWindow>(content, [this](int index, const QString& text){ _tabs->setTabText(index, text); }, tabCount));
         _tabs->setCurrentIndex(tabCount - 1);
     }
 
