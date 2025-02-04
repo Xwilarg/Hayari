@@ -3,15 +3,18 @@
 
 #include "BuiltinRenderer.hpp"
 #include "DebugRenderer.hpp"
+#include "SearchEngine.hpp"
 
 #undef main
 
 int main()
 {
+    Hayari::SearchEngine engine;
+
     std::vector<std::unique_ptr<Hayari::ARenderer>> renderers;
     auto baseRenderer = std::make_unique<Hayari::BuiltinRenderer>();
 
-    renderers.push_back(std::make_unique<Hayari::DebugRenderer>(baseRenderer->GetWindow(), baseRenderer->GetRenderer()));
+    renderers.push_back(std::make_unique<Hayari::DebugRenderer>(baseRenderer->GetWindow(), baseRenderer->GetRenderer(), engine));
     renderers.push_back(std::move(baseRenderer));
 
     bool isActive = true;

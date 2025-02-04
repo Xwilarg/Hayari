@@ -6,8 +6,8 @@
 
 namespace Hayari
 {
-	DebugRenderer::DebugRenderer(SDL_Window* window, SDL_Renderer* renderer)
-        : _renderer(renderer)
+	DebugRenderer::DebugRenderer(SDL_Window* window, SDL_Renderer* renderer, SearchEngine& engine)
+        : _renderer(renderer), _engine(engine)
 	{
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -30,11 +30,13 @@ namespace Hayari
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow();
     }
 
     void DebugRenderer::Render() noexcept
     {
+        float f = 0.3;
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+
         ImGui::Render();
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), _renderer);
     }
