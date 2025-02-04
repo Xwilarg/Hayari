@@ -6,9 +6,12 @@ SET(CMAKE_CXX_FLAGS "/W4 /EHsc")
 find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-include_directories(./inc/)
-aux_source_directory(./src SRCS)
+include_directories(./inc/ ./inc/Render ./inc/Render/Impl)
 
-add_executable(Hayari ${SRCS})
+add_executable(Hayari
+	"src/main.cpp"
+	"src/Render/Impl/BuiltinRenderer.cpp"
+	"src/Render/Impl/DebugRenderer.cpp"
+)
 
 target_link_libraries(Hayari PRIVATE SDL2::SDL2 imgui::imgui)
