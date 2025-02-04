@@ -16,6 +16,8 @@ namespace Hayari
 
         ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
         ImGui_ImplSDLRenderer2_Init(renderer);
+
+        _searchBuff = (char*)calloc(50, sizeof(char));
 	}
 
     DebugRenderer::~DebugRenderer() noexcept
@@ -23,6 +25,8 @@ namespace Hayari
         ImGui_ImplSDLRenderer2_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
+
+        free(_searchBuff);
     }
 
     void DebugRenderer::PrepareRender() noexcept
@@ -34,8 +38,12 @@ namespace Hayari
 
     void DebugRenderer::Render() noexcept
     {
-        float f = 0.3;
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+        ImGui::InputText("URL", _searchBuff, 50);
+        if (ImGui::Button("Search"))
+        {
+            _engine.Search(std::string(_searchBuff));
+            memset(_searchBuff, 0, 50);
+        }
 
         ImGui::Render();
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), _renderer);

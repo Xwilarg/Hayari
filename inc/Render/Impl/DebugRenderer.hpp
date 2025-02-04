@@ -17,5 +17,7 @@ namespace Hayari
 	private:
 		SDL_Renderer* _renderer;
 		SearchEngine& _engine;
+
+		char* _searchBuff;
 	};
 }
