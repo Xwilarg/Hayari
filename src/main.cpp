@@ -1,12 +1,14 @@
 #include <iostream>
 
-#include "SDL3/SDL.h"
+#include "SDL2/SDL.h"
+#undef main
+#include "imgui.h"
 
 int main()
 {
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        std::cout << "SDL failed to init" << std::endl;
+        std::cout << "SDL failed to init: " << SDL_GetError() << std::endl;
         return 1;
     }
 
@@ -15,7 +17,7 @@ int main()
     //The surface contained by the window
     SDL_Renderer* renderer = NULL;
 
-    SDL_CreateWindowAndRenderer("Test window", 800, 600, 0, &window, &renderer);
+    SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
 
     if (!window || !renderer)
     {
@@ -32,7 +34,7 @@ int main()
         {
             switch (event.type)
             {
-            case SDL_EVENT_QUIT:
+            case SDL_QUIT:
                 isActive = false;
                 break;
 
